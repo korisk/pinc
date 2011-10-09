@@ -1,0 +1,34 @@
+Как добавить новый тест?
+Скопировать путой тест:
+/************* dumb test ***********************/
+
+int dumb_init(int nums){
+    incremented = 0;
+    return 0;
+}
+
+void *dumb_thread(void *_data){
+    position *data = (position*)(_data);
+	
+
+    return NULL;
+}
+
+int dumb_fini(int nums){
+    if(incremented == 0)
+        printf("alarm! wrong result\n");
+}
+/***********************************************/
+
+Заменить dumb на Ваш префикс.
+Добавить Ваш код в функции.
+
+Добавить указатели на созданные функции в соответствующие массивы.
+titles[tests]  		= "YOUR test";
+init_test[tests]    = &your_init;
+per_thread[tests]   = &your_thread;
+fini_test[tests]    = &your_fini;
+tests++;
+
+Все. Тест добавлен.
+

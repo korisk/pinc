@@ -268,34 +268,37 @@ int main(int argc, char** argv, char **env){
 	int (*init_test[MAX_TESTS])(int) = {0};			//инициализирующиая
 	int (*fini_test[MAX_TESTS])(int) = {0};			//финализация
 	char *titles[MAX_TESTS] = {0};
-
-	titles[0] = "pure increment test";
-	init_test[0]	= &dumb_init;
-	per_thread[0]	= &dumb_thread;
-	fini_test[0]	= &dumb_fini;
-
-		
-	titles[1] = "mutexed test";
-	init_test[1]	= &mutex_init;
-	per_thread[1]	= &mutex_thread;
-	fini_test[1]	= &mutex_fini;
 	
-	titles[2] = "lock increment test";
-	init_test[2]	= &lock_init;
-	per_thread[2]	= &lock_thread;
-	fini_test[2]	= &lock_fini;
+	int tests = 0;
+	titles[tests] = "pure increment test";
+	init_test[tests]	= &dumb_init;
+	per_thread[tests]	= &dumb_thread;
+	fini_test[tests]	= &dumb_fini;
+	tests++;
+		
+	titles[tests] = "mutexed test";
+	init_test[tests]	= &mutex_init;
+	per_thread[tests]	= &mutex_thread;
+	fini_test[tests]	= &mutex_fini;
+	tests++;
+	
+	titles[tests] = "lock increment test";
+	init_test[tests]	= &lock_init;
+	per_thread[tests]	= &lock_thread;
+	fini_test[tests]	= &lock_fini;
+	tests++;
 
+	titles[tests] = "lock compare&swap test";
+	init_test[tests]	= &lock2_init;
+	per_thread[tests]	= &lock2_thread;
+	fini_test[tests]	= &lock2_fini;
+	tests++;
 
-	titles[3] = "lock compare&swap test";
-	init_test[3]	= &lock2_init;
-	per_thread[3]	= &lock2_thread;
-	fini_test[3]	= &lock2_fini;
-
-
-	titles[4] = "spinlock test";
-	init_test[4]	= &spin_init;
-	per_thread[4]	= &spin_thread;
-	fini_test[4]	= &spin_fini;
+	titles[tests] = "spinlock test";
+	init_test[tests]	= &spin_init;
+	per_thread[tests]	= &spin_thread;
+	fini_test[tests]	= &spin_fini;
+	tests++;
 
 	//default
 	unsigned int	big_factor = 11;
