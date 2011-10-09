@@ -82,7 +82,44 @@ typedef struct {
 
 volatile unsigned long int incremented;
 
+/************* spinlock test ***********************/
 
+pthread_spinlock_t spin;
+
+int spin_init(int nums){
+	incremented = 0;
+	pthread_spin_init(&spin,0);
+	return 0;
+}
+
+void *spin_thread(void *_data){
+	position *data = (position*)(_data);
+	cpu_set_t cpuset;
+	CPU_ZERO((&cpuset));
+	CPU_SET((data->my_number % data->nprocs), (&cpuset));
+	int ret;
+	ret = pthread_setaffinity_np(pthread_self(), sizeof(cpuset), &cpuset);
+	if(ret != 0){
+		fprintf(stdout,"Set affinity error: %s \n",strerror(ret));
+		exit(EXIT_FAILURE);
+	}
+
+	unsigned long N = (unsigned long)((data->big_number)/(data->threads));
+	unsigned long i = 0;
+ 	for(i=0; i< N; i++){
+		pthread_spin_lock(&spin);
+		incremented++;
+		pthread_spin_unlock(&spin);
+	}
+	return NULL;
+}
+
+int spin_fini(int nums){
+	if(incremented == 0)
+		printf("alarm! wrong result\n");
+//	printf("incremented: %ld\n",incremented);
+}
+/***********************************************/
 
 /************* mutex test ***********************/
 
@@ -254,6 +291,11 @@ int main(int argc, char** argv, char **env){
 	per_thread[3]	= &lock2_thread;
 	fini_test[3]	= &lock2_fini;
 
+
+	titles[4] = "spinlock test";
+	init_test[4]	= &spin_init;
+	per_thread[4]	= &spin_thread;
+	fini_test[4]	= &spin_fini;
 
 	//default
 	unsigned int	big_factor = 9;
