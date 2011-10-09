@@ -1,0 +1,17 @@
+CPU model name	: Intel(R) Core(TM)2 Duo CPU     E8400  @ 3.00GHz
+Thread libs: NPTL 2.13
+2 of 2 cores online
+Additition threads: 4
+Big number: 11! = 0x2611500
+Thrds:	1	2	3	4	5	6	
+pure increment test 
+*	124	122	122	121	121	123	
+mutexed test 
+*	1883	4413	3686	4103	4155	4336	
+lock increment test 
+*	406	707	703	746	666	775	
+lock compare&swap test 
+*	716	1419	1384	1571	1367	1566	
+spinlock test 
+*	840	1199	1691	2262	2648	3284	
+Done. 5 tests at all.

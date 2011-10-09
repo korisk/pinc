@@ -298,8 +298,8 @@ int main(int argc, char** argv, char **env){
 	fini_test[4]	= &spin_fini;
 
 	//default
-	unsigned int	big_factor = 9;
-	unsigned int 	additition_threads = 0;
+	unsigned int	big_factor = 11;
+	unsigned int 	additition_threads = 4;
 
 	int opt = 0;
 	while ((opt = getopt(argc, argv, "?hf:t:")) != -1) {
@@ -325,6 +325,9 @@ int main(int argc, char** argv, char **env){
 	printf("CPU ");
 	fflush(stdout);
 	int sys = system("cat /proc/cpuinfo |grep 'model name'|head -n1");
+	printf("Thread libs: ");
+	fflush(stdout);
+	sys = system("getconf GNU_LIBPTHREAD_VERSION");
 
 
 
