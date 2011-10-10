@@ -1,0 +1,18 @@
+Parallel INCrementor
+make;./pinc -t 100 -f 11|tee ./results/CPUNAME
+
+Установка проста
+make;
+pinc -t N -f M
+N - количество нитей в добавок к чилу ядер
+M - показатель для числа итераций (BIG_NUMBER = M!)
+pinc -h
+Usage: pinc [-t addititional threads][-f big number factor][-h|-?]
+	-t addititional theads - number of threads which added to number of processors
+	-f factor - factor which difine big number. Number of increments = factorial(factor)
+	-h,-? - this help
+
+Лучше всего конечно выбрать N = 100, M = 11. Но вы этом случае тест длится достаточно долго (у меня шел 46 минут) и если тратить время не желательно, то можно уменьшить показатели. 
+
+Хабрачеловек, жду твоих комиттов. :)
+Удачи нам всем.
