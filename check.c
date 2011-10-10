@@ -156,7 +156,7 @@ void *mutex_thread(void *_data){
 int mutex_fini(int nums){
 	if(incremented == 0)
 		printf("alarm! wrong result\n");
-//	printf("incremented: %ld\n",incremented);
+//	printf("\nincremented: %lx\n",incremented);
 }
 /***********************************************/
 
@@ -229,6 +229,7 @@ void *lock2_thread(void *_data){
 int lock2_fini(int nums){
 	if(incremented == 0)
 		printf("alarm! wrong result\n");
+//	printf("\nincremented: %lx\n",incremented);
 }
 /***********************************************/
 
@@ -414,7 +415,7 @@ int main(int argc, char** argv, char **env){
 			}
 			(*fini_test[test_number])(threads_number);
 			after = epochmsec();
-			printf("%ld\t", after - before);
+			printf("%ld \t", after - before);
 			fflush(stdout);
 //			printf("-------------------------------\n");
 		}
