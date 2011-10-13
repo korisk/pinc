@@ -1,5 +1,0 @@
-set xlabel "Threads"
-set ylabel "Time, msec"
-plot './r2' u 1 w linespoints ti 'serial increment',   './r2' u 2 w linespoints ti 'mutexes' ,'./r2' u 3 w linespoints ti '__sync_fetch_and_add' ,'./r2' u 4 w linespoints ti '__sync_bool_compare_and_swap'
-set key left top
-plot './r2' u 1 w linespoints ti 'serial increment',   './r2' u 2 w linespoints ti 'mutexes' ,'./r2' u 3 w linespoints ti '__sync_fetch_and_add' ,'./r2' u 4 w linespoints ti '__sync_bool_compare_and_swap', './r2' u 5 w linespoints ti 'spinlock'
