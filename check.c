@@ -81,6 +81,7 @@ typedef struct {
 } position;
 
 volatile unsigned long int incremented;
+pthread_barrier_t 		barrier;
 
 /************* spinlock test ***********************/
 
@@ -89,6 +90,7 @@ pthread_spinlock_t spin;
 int spin_init(int nums){
 	incremented = 0;
 	pthread_spin_init(&spin,0);
+	pthread_barrier_init(&barrier, NULL, nums);
 	return 0;
 }
 
@@ -103,6 +105,7 @@ void *spin_thread(void *_data){
 		fprintf(stdout,"Set affinity error: %s \n",strerror(ret));
 		exit(EXIT_FAILURE);
 	}
+	pthread_barrier_wait(&barrier);
 
 	unsigned long N = (unsigned long)((data->big_number)/(data->threads));
 	unsigned long i = 0;
@@ -111,12 +114,15 @@ void *spin_thread(void *_data){
 		incremented++;
 		pthread_spin_unlock(&spin);
 	}
+	pthread_barrier_wait(&barrier);
 	return NULL;
 }
 
 int spin_fini(int nums){
 	if(incremented == 0)
 		printf("alarm! wrong result\n");
+	pthread_spin_destroy(&spin);
+	pthread_barrier_destroy(&barrier);
 //	printf("incremented: %ld\n",incremented);
 }
 /***********************************************/
@@ -128,6 +134,7 @@ pthread_mutex_t mut;
 int mutex_init(int nums){
 	incremented = 0;
 	pthread_mutex_init(&mut,NULL);
+	pthread_barrier_init(&barrier, NULL, nums);
 	return 0;
 }
 
@@ -143,6 +150,7 @@ void *mutex_thread(void *_data){
 		exit(EXIT_FAILURE);
 	}
 
+	pthread_barrier_wait(&barrier);
 	unsigned long N = (unsigned long)((data->big_number)/(data->threads));
 	unsigned long i = 0;
  	for(i=0; i< N; i++){
@@ -150,12 +158,15 @@ void *mutex_thread(void *_data){
 		incremented++;
 		pthread_mutex_unlock(&mut);
 	}
+	pthread_barrier_wait(&barrier);
 	return NULL;
 }
 
 int mutex_fini(int nums){
 	if(incremented == 0)
 		printf("alarm! wrong result\n");
+	pthread_barrier_destroy(&barrier);
+	pthread_mutex_destroy(&mut);
 //	printf("\nincremented: %lx\n",incremented);
 }
 /***********************************************/
@@ -164,6 +175,7 @@ int mutex_fini(int nums){
 
 int lock_init(int nums){
 	incremented = 0;
+	pthread_barrier_init(&barrier, NULL, nums);
 	return 0;
 }
 
@@ -179,17 +191,20 @@ void *lock_thread(void *_data){
 		exit(EXIT_FAILURE);
 	}
 
+	pthread_barrier_wait(&barrier);
 	unsigned long N = (unsigned long)((data->big_number)/(data->threads));
 	unsigned long i = 0;
  	for(i=0; i< N; i++){
 		__sync_fetch_and_add(&incremented,1);
 	}
+	pthread_barrier_wait(&barrier);
 	return NULL;
 }
 
 int lock_fini(int nums){
 	if(incremented == 0)
 		printf("alarm! wrong result\n");
+	pthread_barrier_destroy(&barrier);
 //	printf("incremented: %ld\n",incremented);
 }
 /***********************************************/
@@ -199,6 +214,7 @@ int lock_fini(int nums){
 
 int lock2_init(int nums){
 	incremented = 0;
+	pthread_barrier_init(&barrier, NULL, nums);
 	return 0;
 }
 
@@ -214,6 +230,7 @@ void *lock2_thread(void *_data){
 		exit(EXIT_FAILURE);
 	}
 
+	pthread_barrier_wait(&barrier);
 	unsigned long N = (unsigned long)((data->big_number)/(data->threads));
 	unsigned long i = 0;
 	unsigned long x = 0;
@@ -223,12 +240,14 @@ void *lock2_thread(void *_data){
 			x = incremented;
 		}while(!__sync_bool_compare_and_swap(&incremented,x , x + 1));
 	}
+	pthread_barrier_wait(&barrier);
 	return NULL;
 }
 
 int lock2_fini(int nums){
 	if(incremented == 0)
 		printf("alarm! wrong result\n");
+	pthread_barrier_destroy(&barrier);
 //	printf("\nincremented: %lx\n",incremented);
 }
 /***********************************************/
@@ -237,17 +256,21 @@ int lock2_fini(int nums){
 
 int dumb_init(int nums){
 	incremented = 0;
+	pthread_barrier_init(&barrier, NULL, nums);
 	return 0;
 }
 
 void *dumb_thread(void *_data){
 	position *data = (position*)(_data);
 //	printf("%d -\n",data->my_number);
-	if(data->my_number != 0)return NULL;
+	pthread_barrier_wait(&barrier);
+	if(data->my_number != 0)goto ex;
 	unsigned long i = 0;
  	for(i=0; i< data->big_number; i++){
 		incremented++;
 	}
+ex:
+	pthread_barrier_wait(&barrier);
 	return NULL;
 }
 
